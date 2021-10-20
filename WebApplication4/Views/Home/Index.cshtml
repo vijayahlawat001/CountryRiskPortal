@@ -1,0 +1,771 @@
+﻿@model CountryRiskPortal.Model.Index
+@{
+    ViewData["Title"] = "Travel Check list";
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <script type="text/javascript" src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <style type="text/css">
+        body {
+            font-family: Arial;
+            font-size: 10pt;
+        }
+
+        .table td, .table th {
+            padding: .25rem !important;
+        }
+    </style>
+    <script>
+        rootUrl = '@Url.Content("~")'
+        $(document).ready(function () {
+            $('#loader').css("display", "block");
+            $.ajax({
+                type: "POST",
+                url: "/Home/GetUserName",
+                data: JSON.stringify({}),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: onSuccess,
+                error: OnErrorCall
+            });
+            function onSuccess(response) {
+                $('#loader').css("display", "none");
+                $("#iptTravellerName").val(JSON.parse(response.responseText));
+            };
+            function OnErrorCall(err) {
+                $('#loader').css("display", "none");
+                alert(err);
+            };
+        });
+        $(document).ajaxStart(function () {
+            $('#loader').css("display", "block");
+        });
+        $(document).ajaxSuccess(function () {
+            $('#loader').css("display", "none");
+        });
+        $(document).ajaxError(function () {
+            $('#loader').css("display", "none");
+        });
+        $(document).ajaxStop(function () {
+            $('#loader').css("display", "none");
+        });
+        function SaveForm() {
+            if ($("#iptTravellerName").val() == "") {
+                alert('Please enter traveller name');
+            }
+            else if ($("#iptDepartureDate").val() == "") {
+                alert('Please enter departure date');
+            }
+            else if ($("#iptCountry").val() == "") {
+                alert('Please enter country name');
+            }
+            else if ($("#iptRiskLevel").val() == "") {
+                alert('Please enter risk level');
+            }
+            else {
+                $('#loader').css("display", "block");
+                var ListCollection = [];
+                for (i = 1; i <= 32; i++) {
+                    var Collection = {};
+                    if (document.getElementsByName("customspan" + i)[0].innerText != '') {
+                        Collection.Type = document.getElementsByName("customType" + i)[0].innerText;
+                        Collection.ID = i;
+                        Collection.Description = document.getElementsByName("customspan" + i)[0].innerText;
+                        Collection.Checked = document.getElementById("customCheck" + i).checked;
+                        Collection.Comments = document.getElementById("customInput" + i).value;
+                        ListCollection.push(Collection);
+                    }
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/Index",
+                    data: JSON.stringify({ listCollections: ListCollection, TravellerName: $("#iptTravellerName").val(), DepartureDate: $("#iptDepartureDate").val(), Country: $("#iptCountry").val(), RiskLevel: $("#iptRiskLevel").val() }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: onSuccess,
+                    error: OnErrorCall
+                });
+                function onSuccess(response) {
+                    $('#loader').css("display", "none");
+                    alert(response.responseText)
+                    window.close();
+                };
+                function OnErrorCall(err) {
+                    $('#loader').css("display", "none");
+                    alert(err);
+                };
+            }
+        };
+    </script>
+</head>
+<body>
+    <div id="loader" class="page-loader" style="display: none; text-align: center;background: rgba(130, 128, 128, 0.42);z-index: 9999999;position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; margin-left: 0.5%">
+        <img id='img_loading' style="margin-top: 20%;left: auto;right: auto;" src="/Images/loading.gif" alt='loading' />
+    </div>
+    <div class="navbar-light bg-white border-bottom box-shadow mb-2">
+        <h3 style="align-content:center !important; text-align:center !important;">TRAVEL CHECKLIST (TCL)</h3>
+        <h4 style="align-content:center !important; text-align:center !important;">Mandatory for trips to countries with risk level "3"(medium),"4"(high), "5"(extreme)</h4>
+        <div class="row" style="padding:10px !important">
+            <div class="col-md-6">
+                <span class="labelsleft">Name of Traveller</span>
+                <input type="text" id="iptTravellerName" class="text-info" style="background-color: #e9ecef; border: 1px solid #ced4da" name="TravellerName" required />
+            </div>
+            <div class="col-md-6">
+                <span class="labelsleft">Departure Date</span>
+                <input type="date" id="iptDepartureDate" class="text-info" style="background-color: #e9ecef; border: 1px solid #ced4da" name="DepartureDate" required />
+            </div>
+            <div class="col-md-6">
+                <span class="labelsleft">Country</span>
+                <input type="text" id="iptCountry" class="text-info" style="background-color: #e9ecef; border: 1px solid #ced4da" name="Country" required />
+            </div>
+            <div class="col-md-6">
+                <span class="labelsleft">Risk Level</span>
+                <select id="iptRiskLevel" class="text-info" style="background-color: #e9ecef; border: 1px solid #ced4da" name="RiskLevel" required>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="col-12" style="padding-left:4% !important; padding-right:4% !important">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Type</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">PLANNING: Before departure</th>
+                    <th scope="col">Check</th>
+                    <th scope="col">Comments</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="border-bottom:none !important;"><span name="customType1">Approval</span></td>
+                    <td>1</td>
+                    <td>
+                        <span type="text" style="width:100% !important; margin:2px !important; border: none !important" id="customspan1" name="customspan1">Check country risk level (<a href="https://gcs.andritz.com/risklevel" target="_blank">https://gcs.andritz.com/risklevel</a> or Email:<a href="mailto:risklevel@andritz.com">risklevel@andritz.com</a>).</span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <label><input type="checkbox" id="customCheck1" name="customCheck1" /></label>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" id="customInput1" name="customInput1" />
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none !important; border-top:none !important; color:transparent !important"><span name="customType2">Approval</span></td>
+                    <td>2</td>
+                    <td>
+                        <span name="customspan2">Trip must be formally approved by a travel approver (superior) in accordance with the internal procedures at your ANDRITZ company.</span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck2" name="customCheck2">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput2" name="customInput2">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none !important; border-top:none !important; color:transparent !important"><span name="customType3">Approval</span></td>
+                    <td>3</td>
+                    <td>
+                        <span name="customspan3">Flight tickets must only be booked with a travel agency accredited by ANDRITZ, indicating your cell phone number and e-mail address. Follow internal procedures of your ANDRITZ company.<sup>A</sup></span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck3" name="customCheck3">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput3" name="customInput3">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none !important; border-top:none !important; color:transparent !important"><span name="customType4">Approval</span></td>
+                    <td>4</td>
+                    <td>
+                        <span name="customspan4">
+                            Only applies to trips to the countries with risk level "5" <sup>B</sup>
+                            Group Corporate Security must be consulted before booking using the procedures outlined in the Pre-Travel Consultation Sheet (intranet: <a href="https://gcs.andritz.com/risktravel" target="_blank">https://gcs.andritz.com/risktravel</a>)
+                        </span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck4" name="customCheck4">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput4" name="customInput4">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none !important; border-top:none !important; color:transparent !important"><span name="customType5">Approval</span></td>
+                    <td>5</td>
+                    <td>
+                        <span name="customspan5">Check if there is a Project Travel Procedure in place (intranet: <a href="https://gcs.andritz.com/ptp" target="_blank">https://gcs.andritz.com/ptp</a>). <sup>C</sup></span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck5" name="customCheck5">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput5" name="customInput5">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none !important; border-top:none !important; color:transparent !important"><span name="customType6">Approval</span></td>
+                    <td>6</td>
+                    <td>
+                        <span name="customspan6">Check if there is a Local Office Arrival Procedure in place (intranet: <a href="https://gcs.andritz.com/loap" target="_blank">https://gcs.andritz.com/loap</a>). <sup>D</sup></span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck6">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput6">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none !important; "><span name="customType7">Entry</span></td>
+                    <td>7</td>
+                    <td>
+                        <span name="customspan7">
+                            Make yourself familiar with your travel destination => check country report/guide and map.<sup>E</sup>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck7">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput7">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none !important; border-top:none !important; color:transparent !important"><span name="customType8">Entry</span></td>
+                    <td>8</td>
+                    <td>
+                        <span name="customspan8">
+                            Check entry requirements => minimum validity of passport, visa, customs, and vaccinations.
+                        </span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck8">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput8">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none !important; border-top:none !important; color:transparent !important"><span name="customType9">Entry</span></td>
+                    <td>9</td>
+                    <td>
+                        <span name="customspan9">
+                            Check validity and expiration date of your passport and visa (where applicable).
+                        </span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck9">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput9">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none !important; border-top:none !important; color:transparent !important"><span name="customType10">Entry</span></td>
+                    <td>10</td>
+                    <td>
+                        <span name="customspan10">
+                            Make personal copy of passport and visa (where applicable) and keep separate from originals.
+                        </span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck10">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput10">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none !important;"><span name="customType11">Medical</span></td>
+                    <td>11</td>
+                    <td>
+                        <span name="customspan11">
+                            Check health risks and vaccinations with Occupational Health Institute, Institute for Tropical Health, or doctor.
+                        </span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck11">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput11">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none !important; border-top:none !important; color:transparent !important"><span name="customType12">Medical</span></td>
+                    <td>12</td>
+                    <td>
+                        <span name="customspan12">
+                            Carry personal vaccination certificate with you.
+                        </span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck12">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput12">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none !important; border-top:none !important; color:transparent !important"><span name="customType13">Medical</span></td>
+                    <td>13</td>
+                    <td>
+                        <span name="customspan13">
+                            <b>Applies to job site travelers only:</b> Check personal travel pharmacy/first-aid kit.
+                        </span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck13">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput13">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none !important; border-top:none !important; color:transparent !important"><span name="customType14">Medical</span></td>
+                    <td>14</td>
+                    <td>
+                        <span name="customspan14">
+                            <b>Applies to job site travelers only:</b> Check that your first-aid course is up-to-date.<sup>F</sup>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck14">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput14">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none !important; border-top:none !important; color:transparent !important"><span name="customType15">Medical</span></td>
+                    <td>15</td>
+                    <td>
+                        <span name="customspan15">
+                            <b>Applies to job site travelers only:</b> Check that your routine medical check-up is up-to-date.<sup>F</sup>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck15">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput15">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none !important; "><span name="customType16">Emergency preparedness</span></td>
+                    <td>16</td>
+                    <td>
+                        <span name="customspan16">
+                            Pre-arrange pick-up at point of entry (typically the airport).<sup>G</sup>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck16">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput16">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom: none !important; font-size: 6px !important; border-top:none !important; color: transparent !important"><span name="customType17">Emergency preparedness</span></td>
+                    <td>17</td>
+                    <td>
+                        <span name="customspan17">
+                            Check and keep contact details of your local embassy.
+                        </span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck17">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput17">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom: none !important; font-size: 6px !important; border-top: none !important; color: transparent !important"><span name="customType18">Emergency preparedness</span></td>
+                    <td>18</td>
+                    <td>
+                        <span name="customspan18">
+                            Save phone numbers and carry card of ANDRITZ Travel Helplines (24/7 service):<sup>H</sup>
+                            +43 50805 51 111 (medical support) + 43 50805 52 222 (security support)
+                        </span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck18">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput18">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom: none !important; font-size: 6px !important; border-top: none !important; color: transparent !important"><span name="customType19">Emergency preparedness</span></td>
+                    <td>19</td>
+                    <td>
+                        <span name="customspan19">
+                            Leave contact details of whom you are meeting in the country with your superior (emergency purposes)
+                        </span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck19">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput19">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom: none !important; border-top: none !important; font-size: 6px !important; color: transparent !important"><span name="customType20">Emergency preparedness</span></td>
+                    <td>20</td>
+                    <td>
+                        <span name="customspan20">
+                            <b>Applies to all job site travelers only:<sup>I</sup></b>
+                            Make yourself familiar with local site safety requirements
+                        </span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck20">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput20">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-right:none !important;"></td>
+                    <td style="border-right:none !important;"></td>
+                    <td style="border-right:none !important; ">IN COUNTRY: on arrival and during trip</td>
+                    <td style="border-right:none !important;"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none !important;"><span name="customType21">Transport and security</span></td>
+                    <td>21</td>
+                    <td>
+                        <span name="customspan21">
+                            <b>Personal identification:</b> Don't wear clothes with ANDRITZ logo during flight. <sup>J</sup>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck21">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput21">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom: none !important; border-top: none !important; font-size: 6px !important; color: transparent !important"><span name="customType22">Transport and security</span></td>
+                    <td>22</td>
+                    <td>
+                        <span name="customspan22">
+                            <b>Personal identification:</b> Keep a low profile. <sup>K</sup>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck22">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput22">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom: none !important; border-top: none !important; font-size: 6px !important; color: transparent !important"><span name="customType23">Transport and security</span></td>
+                    <td>23</td>
+                    <td>
+                        <span name="customspan23">
+                            <B>Emergency:</B> Check local emergency numbers at your destination
+                        </span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck23">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput23">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom: none !important; font-size: 6px !important; border-top: none !important; color: transparent !important"><span name="customType24">Transport and security</span></td>
+                    <td>24</td>
+                    <td>
+                        <span name="customspan24">
+                            <B>Accommodation:</B> Check your room is ideally located between the 2nd and 6th floor at the most<sup>L</sup>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck24">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput24">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom: none !important; font-size: 6px !important; border-top: none !important; color: transparent !important"><span name="customType25">Transport and security</span></td>
+                    <td>25</td>
+                    <td>
+                        <span name="customspan25">
+                            <b>Public transport:</b> Only use licensed public transport/taxis.<sup>M</sup>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck25">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput25">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom: none !important; font-size: 6px !important; border-top: none !important; color: transparent !important"><span name="customType26">Transport and security</span></td>
+                    <td>26</td>
+                    <td>
+                        <span name="customspan26">
+                            <B>Taxi:</B> Hire local taxis through hotel reception.<sup>N</sup>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck26">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput26">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom: none !important; font-size: 6px !important; border-top: none !important; color: transparent !important"><span name="customType27">Transport and security</span></td>
+                    <td>27</td>
+                    <td>
+                        <span name="customspan27">
+                            <B>Site:</B> Make yourself familiar with local site emergency procedure upon arrival.
+                        </span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck27">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput27">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom: none !important; font-size: 6px !important; border-top: none !important; color: transparent !important"><span name="customType28">Transport and security</span></td>
+                    <td>28</td>
+                    <td>
+                        <span name="customspan28">
+                            <B>Site:</B> Ensure that you are briefed on the local security situation by site organization.<sup>O</sup>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck28">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput28">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom: none !important; font-size: 6px !important; border-top: none !important; color: transparent !important"><span name="customType29">Transport and security</span></td>
+                    <td>29</td>
+                    <td>
+                        <span name="customspan29">
+                            <b>Information security:</b> Keep a close eye on IT equipment; never leave devices unattended and openly visible in cars or public places (conference room, airport lounge, etc.).<sup>P</sup>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck29">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput29">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-right:none !important;"></td>
+                    <td style="border-right:none !important;"></td>
+                    <td style="border-right:none !important; ">Space for individual use by the traveller</td>
+                    <td style="border-right:none !important;"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none !important; border-top:none !important; color:transparent !important"><span name="customType30"></span></td>
+                    <td>30</td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" style="width:90% !important" class="custom-input" name="customspan30" id="customspan30">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck30">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput30">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none !important; border-top:none !important; color:transparent !important"><span name="customType31"></span></td>
+                    <td>31</td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" style="width:90% !important" class="custom-input" id="customspan31" name="customspan31">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck31">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput31">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:none !important; border-top:none !important; color:transparent !important"><span name="customType32"></span></td>
+                    <td>32</td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" style="width:90% !important" class="custom-input" id="customspan32" name="customspan32">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-input" id="customCheck32">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="custom-control custom-input">
+                            <input type="text" class="custom-input" id="customInput32">
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <button class="btn btn-primary" onclick="SaveForm()">Save</button>
+    <hr />
+    @ViewBag.Name
+</body>
+</html>

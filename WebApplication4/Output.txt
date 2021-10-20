@@ -1,0 +1,108 @@
+msexchumenabledflags2    -1
+msrtcsip-internetaccessenabled    True
+msexchmailboxfolderset    0
+logoncount    65535
+msexcharchivewarnquota    94371840
+objectguid    System.Byte[]
+cn    Vijay Ahlawat
+accountexpires    9223372036854775807
+msexchuseraccountcontrol    0
+usnchanged    197834686
+badpasswordtime    132720283152724221
+mobile    +91 8377952647
+msexchmobilemailboxflags    1
+msrtcsip-userroutinggroupid    System.Byte[]
+adspath    LDAP://CN=Vijay Ahlawat,OU=Temp Accounts,OU=External Accounts,OU=QNF,OU=IN,OU=Asia,OU=Andritz Group,DC=andritz,DC=com
+msexchumdtmfmap    reversedPhone:882572119+
+dscorepropagationdata    14-06-2021 12:45:17
+msexchrecipienttypedetails    2147483648
+streetaddress    49/5, Mathura Road, Vill. Prithla
+msds-externaldirectoryobjectid    User_d0d52e36-d56b-4394-a191-301e70dc3a67
+wwwhomepage    www.andritz.com
+msrtcsip-deploymentlocator    SRV:
+mstslicenseversion3    C50-10.00-S
+company    ANDRITZ HYDRO Private Limited
+postalcode    121102
+msexchmailboxauditenable    False
+targetaddress    SMTP:QNFVIJ06@andritz.mail.onmicrosoft.com
+userprincipalname    Vijay.Ahlawat@andritz.com
+instancetype    4
+st    Haryana
+title    Consultant
+badpwdcount    0
+garbagecollperiod    1209600
+mstslicenseversion2    7
+physicaldeliveryofficename    QNF
+msexchtextmessagingstate    302120705
+msexchmailboxauditlogagelimit    7776000
+msexchpoliciesexcluded    {26491cfc-9e50-4857-861b-0cb8df22b5d7}
+msexchdumpsterwarningquota    20971520
+showinaddressbook    CN=Faridabad  (QNF),CN=All Sites,CN=All Address Lists,CN=Address Lists Container,CN=ANDRITZ,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=root,DC=com
+givenname    Vijay
+msexchprovisioningflags    0
+objectsid    System.Byte[]
+msexchmdbrulesquota    256
+samaccountname    qnfvij06
+msexchtransportrecipientsettingsflags    0
+lastlogon    132723651448426227
+msexchrecipientdisplaytype    -1073741818
+employeetype    External
+msrtcsip-federationenabled    True
+businesscategory    Consultant
+memberof    CN=AXX G Regional MFA Enforcement - India,OU=Groups,OU=Andritz Group,DC=andritz,DC=com
+msexchelcmailboxflags    2
+msrtcsip-optionflags    257
+mstslicenseversion    655360
+objectcategory    CN=Person,CN=Schema,CN=Configuration,DC=root,DC=com
+msrtcsip-primaryhomeserver    CN=Lc Services,CN=Microsoft,CN=1:13,CN=Pools,CN=RTC Service,CN=Services,CN=Configuration,DC=root,DC=com
+msexchmailboxguid    System.Byte[]
+msrtcsip-primaryuseraddress    sip:Vijay.Ahlawat.external@andritz.com
+legacyexchangedn    /o=ORG001/ou=External (FYDIBOHF25SPDLT)/cn=Recipients/cn=3036016149df4c6685f802a0879d6535
+msexchremoterecipienttype    4
+mailnickname    QNFVIJ06
+lastlogoff    0
+msexchgroupsecurityflags    0
+description    Temp. Account
+internetencoding    0
+msexchucvoicemailsettings    CSHostedVoiceMail=0
+lastlogontimestamp    132723477521775019
+mstsexpiredate    15-08-2021 12:41:36
+objectclass    top
+proxyaddresses    x500:/o=ORG001/ou=Exchange Administrative Group (FYDIBOHF23SPDLT)/cn=Recipients/cn=299c6ae8fc154f348ee47334e9830fb5-Vijay Ahlawat
+msexchbypassaudit    False
+samaccounttype    805306368
+msexchaddressbookflags    1
+telephonenumber    +91 1275 288
+countrycode    356
+useraccountcontrol    512
+pwdlastset    132706324466420394
+msexchmoderationflags    6
+msexchdumpsterquota    31457280
+co    India
+name    Vijay Ahlawat
+lockouttime    0
+whenchanged    02-08-2021 08:17:20
+msrtcsip-userpolicies    0=333784666
+protocolsettings    IMAP4§0§§§§§§§§§§§§
+distinguishedname    CN=Vijay Ahlawat,OU=Temp Accounts,OU=External Accounts,OU=QNF,OU=IN,OU=Asia,OU=Andritz Group,DC=andritz,DC=com
+l    Palwal (Near Faridabad)
+mstsmanagingls    00377-60000-74723-AT509
+department    Information Technology
+displayname    Vijay Ahlawat
+extensionattribute7    HYDRO
+c    IN
+msexcharchivequota    104857600
+msexchversion    88218628259840
+mail    Vijay.Ahlawat.external@andritz.com
+msexchwhenmailboxcreated    22-11-2019 12:20:36
+whencreated    22-11-2019 12:20:36
+extensionattribute1    HYDRO-IN
+manager    CN=Pathak Naresh,OU=IT,OU=Accounts,OU=QNF,OU=IN,OU=Asia,OU=Andritz Group,DC=andritz,DC=com
+msrtcsip-userenabled    True
+primarygroupid    513
+usncreated    74223988
+msexchowapolicy    CN=Default,CN=OWA Mailbox Policies,CN=ANDRITZ,CN=Microsoft Exchange,CN=Services,CN=Configuration,DC=root,DC=com
+codepage    0
+msexchusagelocation    IN
+sn    Ahlawat
+msexchrecipientsoftdeletedstatus    0
